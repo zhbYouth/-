@@ -1,0 +1,9 @@
+{
+  "appId": "com.zhbyouth.tuna",
+  "appName": "吐纳",
+  "webDir": "www",
+  "backgroundColor": "#0a181b",
+  "android": {
+    "allowMixedContent": false
+  }
+}

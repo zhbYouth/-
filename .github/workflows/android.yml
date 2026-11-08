@@ -1,0 +1,56 @@
+name: 打包 Android 安装包
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 同步网页文件到 Android 项目
+        run: |
+          npm run build:web
+          npx cap sync android
+
+      - name: 构建 APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: 重命名安装包
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk tuna.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tuna-apk
+          path: tuna.apk
+
+      - name: 发布到 Releases（latest）
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete latest --yes --cleanup-tag || true
+          gh release create latest tuna.apk \
+            --title "吐纳 Android 安装包" \
+            --notes "最新构建：${GITHUB_SHA::7}。下载 tuna.apk 后在手机上安装；首次安装需要允许「安装未知来源应用」。这是调试签名的测试版安装包。"
