@@ -1,5 +1,5 @@
 /* 吐纳 service worker：离线可用。页面文件优先取网络，失败时用缓存；字体和图标缓存后直接使用。 */
-const CACHE = 'tuna-v2';
+const CACHE = 'tuna-v3';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {
