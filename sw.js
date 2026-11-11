@@ -1,6 +1,8 @@
 /* 吐纳 service worker：离线可用。页面文件优先取网络，失败时用缓存；字体和图标缓存后直接使用。 */
-const CACHE = 'tuna-v3';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
+const CACHE = 'tuna-v4';
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
+  './fonts/wenkai.woff2', './fonts/brush.woff2',
+  './textures/grain-light.png', './textures/grain-dark.png', './textures/mottle-light.png', './textures/mottle-dark.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
